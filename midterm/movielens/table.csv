@@ -1,0 +1,7 @@
+Algorithm, Part 1, Part 2, Part 3, Part 4, Part 5, Average
+Factorization\footnotemark, 3.4874, 3.4448, 3.4226, 3.4310, 3.4578, 3.4487
+Global Mean, 1.1233, 1.1279, 1.1097, 1.1104, 1.1149, 1.1172
+Mixture Mean, 1.8956, 1.8953, 1.9136, 1.9101, 1.9181, 1.9066
+Movie Mean, 0.9816, 0.9790, 0.9807, 0.9761, 0.9857, 0.9806
+SVT\footnotemark[\value{footnote}], 3.6986, 3.6958, 3.6712, 3.6693, 3.6735, 3.6817
+User Mean, 3.7349, 3.7304, 3.7632, 3.7307, 3.7887, 3.7496

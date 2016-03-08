@@ -18,6 +18,7 @@
 \newcommand\mspan[1]{\textbf{span}(#1)}
 \newcommand{\proj}[2][]{\textbf{proj}_{#1}#2}
 \newcommand\norm[1]{\|#1\|}
+\renewcommand\max[1]{\text{max} \lbrace #1 \rbrace}
 
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
@@ -69,6 +70,7 @@
 \begin{document}
 
 \title{CS690OP midterm}
+\author{Bruce Spang}
 \maketitle
 
 \section{Rosenbrock's Function}
@@ -99,7 +101,44 @@ Figure \ref{fig:rosenbrock-newtons} shows the convergence rate of Newton's Metho
 
 \subsection{Subgradient of Max}
 
-\todo{this}
+Let $f(x) = \max{f_1(x), ..., f_n(x)}$.
+
+\subsubsection{\textbf{max} is convex}
+
+If each $f_i$ is a convex function, then $f$ is convex. First, we'll show that $g(x) = \max{g_1(x), g_2(x)}$ is convex:
+
+\begin{align}
+  g(\theta x + (1-\theta)y) &= \max{g_1(\theta x + (1-\theta)y), g_2(\theta x + (1-\theta)y)} \\
+  &\leq \max{\theta g_1(x) + (1-\theta)g_1(y), \theta g_2(x) + (1-\theta)g_2(y)} \\
+  &\leq \theta \max{g_1(x), g_2(x)} + (1-\theta)\max{g_1(y), g_2(y)} \\
+  &= \theta g(x) + (1-\theta) g(y)
+\end{align}
+
+Note that $f(x) = \max{f_1(x), \max{f_2(x), \max{..., f_n(x)}}}$. By induciton, $\max{f_2(x), \max{..., f_n(x)}}$ is convex, so $f(x)$ is convex.
+
+\subsubsection{Subgradient of $f(x)$}
+
+By definition, the subgradient of $f(x)$ at $x_0$ is the set of vectors $g$ such that
+
+$$f(x) - f(x_0) \geq g^T(x-x_0)$$
+
+The subgradient of the max is the convex hull of the subgradients of all the active functions (i.e. each $f_i$ where $f_i(x_0) = f(x_0)$).
+
+If just one function $f_i$ is active, then the subgradient should be the subgradient of $f_i$. At the point $x_0$, $f_i(x_0)$ is equal to $f(x_0)$ and at all other points, $f(x) \geq f_i(x)$, so $f(x) - f(x_0) \geq f_i(x) - f_i(x_0) \geq g_i^T(x-x_0)$.
+
+If there are multiple functions active, then the subgradient should be the convex hull of the subgradients of all active functions. At the point $x_0$, each subgradient of some $f_i(x_0)$ is equal to $f(x_0)$. At all other points $x$, $f(x) \geq f_i(x)$ for each active function, so $f(x) - f(x_0) \geq f_i(x) - f_i(x_0) \geq g_i^T(x-x_0)$. Consider the values of $g_i^T(x-x_0)$ for two of the subgradients $g_j$ and $g_k$ active at $x_0$. If they are the same, then the convex hull is just $g_j$. Otherwise, one is larger, so let's say $g_j^T(x-x_0) \geq g_k^T(x-x_0)$. If we consider any point $y$ between $g_k$ and $g_j$, that point can be written as $y = \theta g_j^T(x-x_0) + (1-\theta) g_k^T(x-x_0) = (\theta g_j + (1-\theta) g_k)^T(x-x_0) = g'^T(x-x_0)$. Therefore, the subgradient is the convex hull of the subgradients of the active functions.
+
+\subsubsection{Subgradient of $\|x\|_1$}
+
+By definition, $\|x\|_1 = \sum_i \|x_i\| = \sum_i \max{x_i, -x_i}$. Therefore, $\partial \|x\|_1 = \partial \sum_i \max{x_i, -x_i} = \sum_i \partial \max{x_i, -x_i}$. By the above rule,
+
+$$
+\partial \max{x_i, -x_i} = \begin{cases}
+  1,  & \text{if } x_i > 0\\
+  -1, & \text{if } x_i < 0\\
+  [1, -1],   & \text{otherwise}
+\end{cases}
+$$
 
 \subsection{Projected Subgradient}
 
